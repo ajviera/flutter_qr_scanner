@@ -33,6 +33,7 @@ version
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -50,8 +51,7 @@ unlinked_spec.ds
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-**/android/key.properties
-**/android/mibarrio.app.jks
+android/.idea
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -209,7 +209,7 @@ doc/api/
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# .idea/modules.xml
+.idea/modules.xml
 # .idea/*.iml
 # .idea/modules
 # CMake
@@ -270,11 +270,11 @@ $RECYCLE.BIN/
 *.msp
 # Windows shortcuts
 *.lnk
-.vscode/
 # End of https://www.gitignore.io/api/dart,macos,windows,flutter,intellij,androidstudio,visualstudiocode
 
-**/common/config.dart
 
+ios/Flutter/flutter_export_environment.sh
 
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
+

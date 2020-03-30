@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_scanner/src/helpers/show_flush_bar.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/screens/about/about_page.dart';
 import 'package:qr_scanner/src/screens/qr_scan/history_scans_page.dart';
 import 'package:qr_scanner/src/screens/qr_scan/qr_scan_page.dart';
@@ -34,9 +32,8 @@ class HomePageState extends State<HomePage> {
         appBar: _appBar(),
         drawer: HomeDrawer(drawerOptions: _drawerOptions()),
         key: _scaffoldKey,
-        backgroundColor: Provider.of<ThemeChangeNotifier>(context)
-            .getTheme()
-            .backgroundColor,
+        backgroundColor:
+            ProviderManager.themeChangeNotifier().getTheme().backgroundColor,
         body: _getDrawerItemWidget(_selectedDrawerIndex),
       ),
     );
@@ -44,7 +41,7 @@ class HomePageState extends State<HomePage> {
 
   Widget _appBar() {
     return AppBar(
-      backgroundColor: Provider.of<ThemeChangeNotifier>(context)
+      backgroundColor: ProviderManager.themeChangeNotifier()
           .getTheme()
           .appBarBackgroundColor,
       // leading: Builder(
@@ -84,27 +81,23 @@ class HomePageState extends State<HomePage> {
     setState(() {
       drawerItems = [
         DrawerItem(
-          Provider.of<LanguageChangeNotifier>(context)
-              .getStrings()
-              .qrScanPageTitle,
+          ProviderManager.languageChangeNotifier().getStrings().qrScanPageTitle,
           Icons.search,
         ),
         DrawerItem(
-          Provider.of<LanguageChangeNotifier>(context)
+          ProviderManager.languageChangeNotifier()
               .getStrings()
               .historyScansPageTitle,
           Icons.history,
         ),
         DrawerItem(
-          Provider.of<LanguageChangeNotifier>(context)
+          ProviderManager.languageChangeNotifier()
               .getStrings()
               .settingsPageTitle,
           Icons.settings,
         ),
         DrawerItem(
-          Provider.of<LanguageChangeNotifier>(context)
-              .getStrings()
-              .aboutPageTitle,
+          ProviderManager.languageChangeNotifier().getStrings().aboutPageTitle,
           Icons.info,
         ),
       ];
@@ -170,30 +163,24 @@ class HomePageState extends State<HomePage> {
           builder: (context) {
             return AlertDialog(
               title: Text(
-                Provider.of<LanguageChangeNotifier>(context)
+                ProviderManager.languageChangeNotifier()
                     .getStrings()
                     .areYouSure,
               ),
               content: Text(
-                Provider.of<LanguageChangeNotifier>(context)
-                    .getStrings()
-                    .exitApp,
+                ProviderManager.languageChangeNotifier().getStrings().exitApp,
               ),
               actions: <Widget>[
                 FlatButton(
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(
-                    Provider.of<LanguageChangeNotifier>(context)
-                        .getStrings()
-                        .no,
+                    ProviderManager.languageChangeNotifier().getStrings().no,
                   ),
                 ),
                 FlatButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(
-                    Provider.of<LanguageChangeNotifier>(context)
-                        .getStrings()
-                        .yes,
+                    ProviderManager.languageChangeNotifier().getStrings().yes,
                   ),
                 ),
               ],

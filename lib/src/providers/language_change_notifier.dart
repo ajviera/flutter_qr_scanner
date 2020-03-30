@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:qr_scanner/src/common/prefs_singleton.dart';
-import 'package:qr_scanner/src/helpers/enums/language_type.dart';
 import 'package:qr_scanner/src/locales/english_strings.dart';
-import 'package:qr_scanner/src/locales/locale_singleton.dart';
 import 'package:qr_scanner/src/locales/spanish_strings.dart';
+import 'dart:ui' as ui;
+import 'package:qr_scanner/src/locales/strings.dart';
 
 class LanguageChangeNotifier with ChangeNotifier {
+  Strings language;
+
   LanguageChangeNotifier() {
     _loadData();
   }
 
-  getStrings() => LocaleSingleton.strings;
+  Strings getStrings() => language;
 
   void _loadData() {
-    if (PrefsSingleton.prefs.getBool('languageSpanish') != null) {
+    if (PrefsSingleton.prefs.getString('language') != null) {
       _fromSharePreferences();
     } else {
       _fromCurrentLocale();
@@ -22,45 +23,30 @@ class LanguageChangeNotifier with ChangeNotifier {
   }
 
   void _fromSharePreferences() {
-    if (PrefsSingleton.prefs.getBool('languageSpanish')) {
-      _setSpanish();
-    } else {
-      _setEnglish();
-    }
+    changeLanguage(PrefsSingleton.prefs.getString('language'));
   }
 
   void _fromCurrentLocale() {
-    // Intl.defaultLocale = 'es_AR';
-    String myLocale = Intl.getCurrentLocale();
-    if (myLocale == 'es_AR') {
-      _setSpanish();
-    } else {
-      _setEnglish();
-    }
+    changeLanguage(ui.window.locale.languageCode);
   }
 
-  void _setSpanish() {
-    LocaleSingleton.strings = SpanishStrings();
-    PrefsSingleton.prefs.setBool('languageSpanish', true);
+  void changeLanguage(String languageType) async {
+    _setLanguage(languageType);
+    notifyListeners();
   }
 
-  void _setEnglish() {
-    LocaleSingleton.strings = EnglishStrings();
-    PrefsSingleton.prefs.setBool('languageSpanish', false);
-  }
-
-  void changeLanguage(LANGUAGETYPE languageType) async {
+  void _setLanguage(String languageType) {
+    PrefsSingleton.prefs.setString('language', languageType);
     switch (languageType) {
-      case LANGUAGETYPE.SPANISH:
-        _setSpanish();
+      case 'es':
+        language = SpanishStrings();
         break;
-      case LANGUAGETYPE.ENGLISH:
-        _setEnglish();
+      case 'en':
+        language = EnglishStrings();
         break;
       default:
-        _setEnglish();
+        language = EnglishStrings();
         break;
     }
-    notifyListeners();
   }
 }

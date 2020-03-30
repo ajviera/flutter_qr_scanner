@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_scanner/src/services/auth.dart';
 import 'package:qr_scanner/src/widgets/row_padded.dart';
 import 'package:qr_scanner/src/widgets/user_circle_avatar.dart';
 

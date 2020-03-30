@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_scanner/src/common/general_regex.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 
 class Validator {
   BuildContext context;
@@ -12,13 +11,11 @@ class Validator {
 
   String emailValidator(String input) {
     if (input.isEmpty) {
-      return Provider.of<LanguageChangeNotifier>(context)
+      return ProviderManager.languageChangeNotifier()
           .getStrings()
           .emailEmptyError;
     } else if (!GeneralRegex.regexEmail.hasMatch(input)) {
-      return Provider.of<LanguageChangeNotifier>(context)
-          .getStrings()
-          .emailError;
+      return ProviderManager.languageChangeNotifier().getStrings().emailError;
     } else {
       return null;
     }
@@ -26,11 +23,11 @@ class Validator {
 
   String passwordValidator(String input) {
     if (input.isEmpty) {
-      return Provider.of<LanguageChangeNotifier>(context)
+      return ProviderManager.languageChangeNotifier()
           .getStrings()
           .passwordError;
     } else if (!GeneralRegex.regexPassword.hasMatch(input)) {
-      return Provider.of<LanguageChangeNotifier>(context)
+      return ProviderManager.languageChangeNotifier()
           .getStrings()
           .passwordErrorBadFormat;
     } else {
@@ -40,11 +37,9 @@ class Validator {
 
   String phoneValidator(String input) {
     if (input.isEmpty) {
-      return Provider.of<LanguageChangeNotifier>(context)
-          .getStrings()
-          .phoneError;
+      return ProviderManager.languageChangeNotifier().getStrings().phoneError;
     } else if (!GeneralRegex.regexPhone.hasMatch(input)) {
-      return Provider.of<LanguageChangeNotifier>(context)
+      return ProviderManager.languageChangeNotifier()
           .getStrings()
           .phoneErrorBadFormat;
     } else {

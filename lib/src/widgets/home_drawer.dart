@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_scanner/src/interactors/vibrate.dart';
-import 'package:qr_scanner/src/providers/app_change_notifier.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/screens/user/user_details_page.dart';
 import 'package:qr_scanner/src/services/auth.dart';
 import 'package:qr_scanner/src/themes/ui_dark.dart';
@@ -28,7 +25,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _isSelected =
-          Provider.of<ThemeChangeNotifier>(context).getTheme().runtimeType ==
+          ProviderManager.themeChangeNotifier().getTheme().runtimeType ==
               UiDark;
     });
 
@@ -38,11 +35,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     setState(() {
-      user = Provider.of<AppGeneralNotifier>(context).getCurrentUser();
+      user = ProviderManager.appGeneralNotifier().getCurrentUser();
     });
     return Drawer(
       child: Container(
-        color: Provider.of<ThemeChangeNotifier>(context)
+        color: ProviderManager.themeChangeNotifier()
             .getTheme()
             .drawerBackgroundColor,
         child: Column(
@@ -54,38 +51,33 @@ class _HomeDrawerState extends State<HomeDrawer> {
             Expanded(child: SizedBox()),
             IconButton(
               icon: Image(
-                image: Provider.of<ThemeChangeNotifier>(context)
-                    .getTheme()
-                    .themeIcon,
+                image:
+                    ProviderManager.themeChangeNotifier().getTheme().themeIcon,
               ),
-              color: Provider.of<ThemeChangeNotifier>(context)
-                  .getTheme()
-                  .logoutColor,
+              color:
+                  ProviderManager.themeChangeNotifier().getTheme().logoutColor,
               onPressed: () {
                 if (_isSelected) {
-                  Provider.of<ThemeChangeNotifier>(context).light();
+                  ProviderManager.themeChangeNotifier().light();
                 } else {
-                  Provider.of<ThemeChangeNotifier>(context).dark();
+                  ProviderManager.themeChangeNotifier().dark();
                 }
                 Vibrate().execute();
                 _isSelected = !_isSelected;
               },
             ),
             Divider(
-              color: Provider.of<ThemeChangeNotifier>(context)
-                  .getTheme()
-                  .logoutColor,
+              color:
+                  ProviderManager.themeChangeNotifier().getTheme().logoutColor,
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 30.0),
               child: ListTile(
                 title: Text(
-                  Provider.of<LanguageChangeNotifier>(context)
-                      .getStrings()
-                      .logout,
+                  ProviderManager.languageChangeNotifier().getStrings().logout,
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                    color: Provider.of<ThemeChangeNotifier>(context)
+                    color: ProviderManager.themeChangeNotifier()
                         .getTheme()
                         .logoutColor,
                     fontSize: 16.0,
@@ -93,7 +85,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ),
                 trailing: Icon(
                   Icons.exit_to_app,
-                  color: Provider.of<ThemeChangeNotifier>(context)
+                  color: ProviderManager.themeChangeNotifier()
                       .getTheme()
                       .logoutColor,
                 ),
@@ -109,7 +101,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget _header(BuildContext context) {
     return UserAccountsDrawerHeader(
       decoration: BoxDecoration(
-        color: Provider.of<ThemeChangeNotifier>(context)
+        color: ProviderManager.themeChangeNotifier()
             .getTheme()
             .drawerHeaderBackgroundColor,
       ),
@@ -138,7 +130,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   void _signOut(BuildContext context) async {
     try {
       await Auth().signOut();
-      Provider.of<AppGeneralNotifier>(context).logout();
+      ProviderManager.appGeneralNotifier().logout();
     } catch (e) {
       print(e.toString());
     }

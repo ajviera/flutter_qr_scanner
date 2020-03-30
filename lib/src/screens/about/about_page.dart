@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 
 class AboutPage extends StatefulWidget {
   AboutPage({Key key}) : super(key: key);
@@ -23,7 +21,7 @@ class _AboutPageState extends State<AboutPage> {
             height: MediaQuery.of(context).size.height * 0.33,
             width: MediaQuery.of(context).size.height * 0.33,
             child: Image(
-              image: Provider.of<ThemeChangeNotifier>(context)
+              image: ProviderManager.themeChangeNotifier()
                   .getTheme()
                   .invertedScanQrImage,
             ),
@@ -32,12 +30,11 @@ class _AboutPageState extends State<AboutPage> {
         SizedBox(
           width: MediaQuery.of(context).size.height * 0.40,
           child: Text(
-            Provider.of<LanguageChangeNotifier>(context).getStrings().appTitle,
+            ProviderManager.languageChangeNotifier().getStrings().appTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Provider.of<ThemeChangeNotifier>(context)
-                  .getTheme()
-                  .primaryColor,
+              color:
+                  ProviderManager.themeChangeNotifier().getTheme().primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 45.0,
             ),
@@ -48,10 +45,10 @@ class _AboutPageState extends State<AboutPage> {
           child: SizedBox(
             width: MediaQuery.of(context).size.height * 0.40,
             child: Text(
-              Provider.of<LanguageChangeNotifier>(context).getStrings().version,
+              ProviderManager.languageChangeNotifier().getStrings().version,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Provider.of<ThemeChangeNotifier>(context)
+                color: ProviderManager.themeChangeNotifier()
                     .getTheme()
                     .scanQrImageBackgroundColor,
                 fontWeight: FontWeight.bold,

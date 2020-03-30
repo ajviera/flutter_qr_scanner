@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/interactors/vibrate.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
 import 'package:qr_scanner/src/widgets/raised_gradient_button.dart';
 
 class CreateQRPage extends StatefulWidget {
@@ -49,12 +47,12 @@ class _CreateQRPageState extends State<CreateQRPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    Provider.of<LanguageChangeNotifier>(context)
+                    ProviderManager.languageChangeNotifier()
                         .getStrings()
                         .createQRPage,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Provider.of<ThemeChangeNotifier>(context)
+                      color: ProviderManager.themeChangeNotifier()
                           .getTheme()
                           .scanQRPageWords,
                       fontSize: 30.0,
@@ -87,7 +85,7 @@ class _CreateQRPageState extends State<CreateQRPage> {
       child: Container(
         height: 150.0,
         decoration: BoxDecoration(
-          color: Provider.of<ThemeChangeNotifier>(context)
+          color: ProviderManager.themeChangeNotifier()
               .getTheme()
               .cardBackgroundColor,
           border: Border.all(color: Colors.white),
@@ -120,9 +118,7 @@ class _CreateQRPageState extends State<CreateQRPage> {
       child: RaisedGradientButton(
         key: Key('createQr'),
         child: Text(
-          Provider.of<LanguageChangeNotifier>(context)
-              .getStrings()
-              .createQRPage,
+          ProviderManager.languageChangeNotifier().getStrings().createQRPage,
           style: TextStyle(fontSize: 20.0, color: Colors.white),
         ),
         width: 120.0,
@@ -131,7 +127,7 @@ class _CreateQRPageState extends State<CreateQRPage> {
           setState(() => _qrText = _textController.text);
         },
         gradient:
-            Provider.of<ThemeChangeNotifier>(context).getTheme().buttonGradient,
+            ProviderManager.themeChangeNotifier().getTheme().buttonGradient,
       ),
     );
   }
@@ -139,11 +135,11 @@ class _CreateQRPageState extends State<CreateQRPage> {
   Widget _qrCode() {
     return Container(
       decoration: BoxDecoration(
-        color: Provider.of<ThemeChangeNotifier>(context)
+        color: ProviderManager.themeChangeNotifier()
             .getTheme()
             .cardBackgroundColor,
         border: Border.all(
-          color: Provider.of<ThemeChangeNotifier>(context)
+          color: ProviderManager.themeChangeNotifier()
               .getTheme()
               .cardBackgroundColor,
         ),

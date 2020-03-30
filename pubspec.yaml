@@ -9,28 +9,27 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
-  firebase_auth: ^0.11.1
-  cloud_firestore: ^0.11.0+2
-  google_sign_in: ^4.0.1+3
-  url_launcher: ^5.0.2
-  firebase_core: ^0.4.0+1
-  firebase_analytics: ^3.0.1
-  shared_preferences: ^0.5.1+1
-  intl: ^0.15.7
-  provider: ^2.0.1
-  sliding_up_panel: ^0.3.4
-  flushbar: ^1.4.0
-  qr_flutter: ^2.0.0+51
-  permission_handler: ^2.2.0
-  vibration: ^1.0.2
+  firebase_core: ^0.4.4+3
+  firebase_analytics: ^5.0.11
+  firebase_auth: ^0.15.5+3
+  cloud_firestore: ^0.13.4+2
+  google_sign_in: ^4.3.0
+  url_launcher: ^5.4.2
+  shared_preferences: ^0.5.6+3
+  intl: ^0.16.1
+  provider: ^3.2.0
+  sliding_up_panel: ^1.0.0
+  flushbar: 1.6.0
+  qr_flutter: ^3.2.0
+  permission_handler: ^4.4.0
+  vibration: ^1.2.4
   barcode_scan:
-    git:
-      ref: master
-      url: https://github.com/ArielMartinezViera/flutter_barcode_reader
+    path: packages/flutter_barcode_reader
   contacts_service:
     git:
       ref: master
       url: https://github.com/ArielMartinezViera/flutter_contacts
+  easy_permission_validator: ^1.0.8
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 
 class ShowSnackBar {
   String text;
@@ -19,7 +17,7 @@ class ShowSnackBar {
 
   _showSuccess() {
     Flushbar(
-      title: Provider.of<LanguageChangeNotifier>(context).getStrings().appTitle,
+      title: ProviderManager.languageChangeNotifier().getStrings().appTitle,
       message: this.text,
       flushbarPosition: FlushbarPosition.TOP,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -28,14 +26,13 @@ class ShowSnackBar {
       backgroundColor: Colors.white,
       boxShadows: [
         BoxShadow(
-          color:
-              Provider.of<ThemeChangeNotifier>(context).getTheme().primaryColor,
+          color: ProviderManager.themeChangeNotifier().getTheme().primaryColor,
           offset: Offset(0.0, 2.0),
           blurRadius: 3.0,
         ),
       ],
       backgroundGradient:
-          Provider.of<ThemeChangeNotifier>(context).getTheme().buttonGradient,
+          ProviderManager.themeChangeNotifier().getTheme().buttonGradient,
       isDismissible: false,
       duration: Duration(seconds: 4),
       icon: Icon(Icons.check_circle, color: Colors.green),
@@ -49,7 +46,7 @@ class ShowSnackBar {
       // showProgressIndicator: true,
       // progressIndicatorBackgroundColor: Colors.red,
       titleText: Text(
-        Provider.of<LanguageChangeNotifier>(context).getStrings().appTitle,
+        ProviderManager.languageChangeNotifier().getStrings().appTitle,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20.0,
@@ -70,7 +67,7 @@ class ShowSnackBar {
 
   _showError() {
     Flushbar(
-      title: Provider.of<LanguageChangeNotifier>(context).getStrings().appTitle,
+      title: ProviderManager.languageChangeNotifier().getStrings().appTitle,
       message: this.text,
       flushbarPosition: FlushbarPosition.TOP,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -79,8 +76,7 @@ class ShowSnackBar {
       backgroundColor: Colors.white,
       boxShadows: [
         BoxShadow(
-          color:
-              Provider.of<ThemeChangeNotifier>(context).getTheme().primaryColor,
+          color: ProviderManager.themeChangeNotifier().getTheme().primaryColor,
           offset: Offset(0.0, 2.0),
           blurRadius: 3.0,
         ),
@@ -104,12 +100,11 @@ class ShowSnackBar {
       // showProgressIndicator: true,
       // progressIndicatorBackgroundColor: Colors.red,
       titleText: Text(
-        Provider.of<LanguageChangeNotifier>(context).getStrings().appTitle,
+        ProviderManager.languageChangeNotifier().getStrings().appTitle,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20.0,
-          color:
-              Provider.of<ThemeChangeNotifier>(context).getTheme().primaryColor,
+          color: ProviderManager.themeChangeNotifier().getTheme().primaryColor,
           fontFamily: "ShadowsIntoLightTwo",
         ),
       ),

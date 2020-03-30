@@ -1,4 +1,0 @@
-enum LANGUAGETYPE {
-  SPANISH,
-  ENGLISH,
-}

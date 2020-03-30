@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_scanner/src/common/general_regex.dart';
 import 'package:qr_scanner/src/helpers/validator.dart';
-import 'package:qr_scanner/src/providers/app_change_notifier.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/services/auth.dart';
 import 'package:qr_scanner/src/themes/ui_dark.dart';
 import 'package:qr_scanner/src/widgets/loading_popup.dart';
@@ -79,10 +76,12 @@ class _LoginPageState extends State<LoginPage>
         _logoHeightPercent = 0.12;
         _logoWidthPercent = 0.12;
       } else {
-        _logoIsVisible = true;
-        _topLogoPadding = 70.0;
-        _logoHeightPercent = 0.35;
-        _logoWidthPercent = 0.35;
+        if (!textSecondFocusNode.hasFocus) {
+          _logoIsVisible = true;
+          _topLogoPadding = 70.0;
+          _logoHeightPercent = 0.35;
+          _logoWidthPercent = 0.35;
+        }
       }
     });
   }
@@ -95,10 +94,12 @@ class _LoginPageState extends State<LoginPage>
         _logoHeightPercent = 0.12;
         _logoWidthPercent = 0.12;
       } else {
-        _logoIsVisible = true;
-        _topLogoPadding = 70.0;
-        _logoHeightPercent = 0.35;
-        _logoWidthPercent = 0.35;
+        if (!textFirstFocusNode.hasFocus) {
+          _logoIsVisible = true;
+          _topLogoPadding = 70.0;
+          _logoHeightPercent = 0.35;
+          _logoWidthPercent = 0.35;
+        }
       }
     });
   }
@@ -182,7 +183,7 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 Text(
-                  Provider.of<LanguageChangeNotifier>(context)
+                  ProviderManager.languageChangeNotifier()
                       .getStrings()
                       .loginWithGoogle,
                   style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -239,15 +240,14 @@ class _LoginPageState extends State<LoginPage>
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => LoadingPopup(
-              future: () async {
-                return _formType == FormType.login
-                    ? await Auth().signIn(_email, _password)
-                    : await Auth().createUser(_email, _password);
-              },
-              successFunction: () =>
-                  Provider.of<AppGeneralNotifier>(context).login(),
-              failFunction: () => {},
-            ),
+          future: () async {
+            return _formType == FormType.login
+                ? await Auth().signIn(_email, _password)
+                : await Auth().createUser(_email, _password);
+          },
+          successFunction: () => ProviderManager.appGeneralNotifier().login(),
+          failFunction: () => {},
+        ),
       );
     }
   }
@@ -262,13 +262,12 @@ class _LoginPageState extends State<LoginPage>
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => LoadingPopup(
-            future: () async {
-              return await Auth().signInWithGoogle();
-            },
-            successFunction: () =>
-                Provider.of<AppGeneralNotifier>(context).login(),
-            failFunction: () => {},
-          ),
+        future: () async {
+          return await Auth().signInWithGoogle();
+        },
+        successFunction: () => ProviderManager.appGeneralNotifier().login(),
+        failFunction: () => {},
+      ),
     );
   }
 
@@ -300,9 +299,8 @@ class _LoginPageState extends State<LoginPage>
           },
           focusNode: textFirstFocusNode,
           decoration: InputDecoration(
-              labelText: Provider.of<LanguageChangeNotifier>(context)
-                  .getStrings()
-                  .email),
+              labelText:
+                  ProviderManager.languageChangeNotifier().getStrings().email),
           autocorrect: false,
           validator: (val) => validator.emailValidator(val),
           onSaved: (val) => _email = val,
@@ -319,9 +317,8 @@ class _LoginPageState extends State<LoginPage>
           key: Key('password'),
           focusNode: textSecondFocusNode,
           decoration: InputDecoration(
-            labelText: Provider.of<LanguageChangeNotifier>(context)
-                .getStrings()
-                .password,
+            labelText:
+                ProviderManager.languageChangeNotifier().getStrings().password,
             suffixIcon: IconButton(
               icon: Icon(_passwordIcon),
               onPressed: () => _toggle(),
@@ -359,7 +356,7 @@ class _LoginPageState extends State<LoginPage>
           RaisedGradientButton(
             key: Key('login'),
             child: Text(
-              Provider.of<LanguageChangeNotifier>(context).getStrings().login,
+              ProviderManager.languageChangeNotifier().getStrings().login,
               style: TextStyle(color: Colors.white, fontSize: 25.0),
             ),
             height: _buttonHeight,
@@ -368,7 +365,7 @@ class _LoginPageState extends State<LoginPage>
           ),
           FlatButton(
             key: Key('need-account'),
-            child: Text(Provider.of<LanguageChangeNotifier>(context)
+            child: Text(ProviderManager.languageChangeNotifier()
                 .getStrings()
                 .needAccount),
             onPressed: moveToRegister,
@@ -379,9 +376,7 @@ class _LoginPageState extends State<LoginPage>
           RaisedGradientButton(
             key: Key('register'),
             child: Text(
-              Provider.of<LanguageChangeNotifier>(context)
-                  .getStrings()
-                  .register,
+              ProviderManager.languageChangeNotifier().getStrings().register,
               style: TextStyle(color: Colors.white, fontSize: 25.0),
             ),
             height: _buttonHeight,
@@ -390,7 +385,7 @@ class _LoginPageState extends State<LoginPage>
           ),
           FlatButton(
             key: Key('need-login'),
-            child: Text(Provider.of<LanguageChangeNotifier>(context)
+            child: Text(ProviderManager.languageChangeNotifier()
                 .getStrings()
                 .haveAccount),
             onPressed: moveToLogin,

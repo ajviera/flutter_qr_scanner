@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 
 mixin KeyboardListener<T extends StatefulWidget> on State<T> {
   Map<String, FocusNode> _map = Map();
@@ -48,11 +46,11 @@ mixin KeyboardListener<T extends StatefulWidget> on State<T> {
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   ),
                   onPressed: () => clearFocus(),
-                  color: Provider.of<ThemeChangeNotifier>(context)
+                  color: ProviderManager.themeChangeNotifier()
                       .getTheme()
                       .primaryColor,
                   child: Text(
-                    Provider.of<LanguageChangeNotifier>(context)
+                    ProviderManager.languageChangeNotifier()
                         .getStrings()
                         .acceptButton,
                     style: TextStyle(color: Colors.white),

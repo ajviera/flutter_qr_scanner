@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/screens/qr_scan/create_qr_page.dart';
 import 'package:qr_scanner/src/screens/qr_scan/scan_qr_page.dart';
 import 'package:qr_scanner/src/widgets/dot_indicator.dart';
@@ -74,7 +73,7 @@ class BackgroundDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Provider.of<ThemeChangeNotifier>(context)
+      color: ProviderManager.themeChangeNotifier()
           .getTheme()
           .appBarBackgroundColor,
       child: Column(
@@ -84,7 +83,7 @@ class BackgroundDesign extends StatelessWidget {
             flex: 9,
             child: Container(
               decoration: BoxDecoration(
-                color: Provider.of<ThemeChangeNotifier>(context)
+                color: ProviderManager.themeChangeNotifier()
                     .getTheme()
                     .backgroundColor,
                 borderRadius: BorderRadius.only(

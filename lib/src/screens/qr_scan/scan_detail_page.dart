@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/common/permission_validator.dart';
+import 'package:qr_scanner/src/common/permission_object.dart';
 import 'package:qr_scanner/src/helpers/enums/scan_type.dart';
 import 'package:qr_scanner/src/helpers/show_flush_bar.dart';
 import 'package:qr_scanner/src/interactors/save_contact.dart';
 import 'package:qr_scanner/src/interactors/vibrate.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/services/repositories/qr_code_storage.dart';
 import 'package:qr_scanner/src/widgets/item_qr.dart';
 import 'package:qr_scanner/src/widgets/loading_popup.dart';
@@ -34,7 +32,7 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
-          Provider.of<ThemeChangeNotifier>(context).getTheme().backgroundColor,
+          ProviderManager.themeChangeNotifier().getTheme().backgroundColor,
       appBar: _appBar(),
       body: _body(),
     );
@@ -58,14 +56,14 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
             IconButton(
               icon: Icon(
                 Icons.delete_forever,
-                color: Provider.of<ThemeChangeNotifier>(context)
+                color: ProviderManager.themeChangeNotifier()
                     .getTheme()
                     .scanQrImageBackgroundColor,
                 size: 40.0,
               ),
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
-              tooltip: Provider.of<LanguageChangeNotifier>(context)
+              tooltip: ProviderManager.languageChangeNotifier()
                   .getStrings()
                   .deleteFavourite,
               onPressed: () => _deleteQrCode(),
@@ -85,32 +83,30 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
         return IconButton(
           icon: Icon(
             Icons.import_contacts,
-            color: Provider.of<ThemeChangeNotifier>(context)
+            color: ProviderManager.themeChangeNotifier()
                 .getTheme()
                 .scanQrImageBackgroundColor,
             size: 40.0,
           ),
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
-          tooltip: Provider.of<LanguageChangeNotifier>(context)
-              .getStrings()
-              .addContact,
+          tooltip:
+              ProviderManager.languageChangeNotifier().getStrings().addContact,
           onPressed: () => _saveContact(widget.qrCode),
         );
       case SCANTYPE.WEB:
         return IconButton(
           icon: Icon(
             Icons.open_in_browser,
-            color: Provider.of<ThemeChangeNotifier>(context)
+            color: ProviderManager.themeChangeNotifier()
                 .getTheme()
                 .scanQrImageBackgroundColor,
             size: 40.0,
           ),
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
-          tooltip: Provider.of<LanguageChangeNotifier>(context)
-              .getStrings()
-              .launchUrl,
+          tooltip:
+              ProviderManager.languageChangeNotifier().getStrings().launchUrl,
           onPressed: () => _launchURL(widget.qrCode),
         );
     }
@@ -119,7 +115,7 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
 
   Widget _appBar() {
     return AppBar(
-      backgroundColor: Provider.of<ThemeChangeNotifier>(context)
+      backgroundColor: ProviderManager.themeChangeNotifier()
           .getTheme()
           .appBarBackgroundColor,
       // leading: Builder(
@@ -141,23 +137,23 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
   }
 
   _saveContact(String text) async {
-    var result = await PermissionValidator(context: context).contacts();
+    var result = await permissionValidator(context: context).contacts();
     if (result) {
       showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => LoadingPopup(
-              future: () async {
-                return await SaveContactFromVCARD.initializeDefault(text);
-              },
-              successFunction: () => {},
-              failFunction: () => {},
-            ),
+          future: () async {
+            return await SaveContactFromVCARD.initializeDefault(text);
+          },
+          successFunction: () => {},
+          failFunction: () => {},
+        ),
       ).then((result) {
         switch (result) {
           case SaveContactStatus.OK:
             return ShowSnackBar().show(
-              text: Provider.of<LanguageChangeNotifier>(context)
+              text: ProviderManager.languageChangeNotifier()
                   .getStrings()
                   .contactSaved,
               context: context,
@@ -165,7 +161,7 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
             );
           case SaveContactStatus.ERROR:
             return ShowSnackBar().show(
-              text: Provider.of<LanguageChangeNotifier>(context)
+              text: ProviderManager.languageChangeNotifier()
                   .getStrings()
                   .contactNotSave,
               context: context,
@@ -173,7 +169,7 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
             );
           case SaveContactStatus.EXIST:
             return ShowSnackBar().show(
-              text: Provider.of<LanguageChangeNotifier>(context)
+              text: ProviderManager.languageChangeNotifier()
                   .getStrings()
                   .contactNotSave,
               context: context,
@@ -190,12 +186,10 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            Provider.of<LanguageChangeNotifier>(context)
-                .getStrings()
-                .areYouSure,
+            ProviderManager.languageChangeNotifier().getStrings().areYouSure,
           ),
           content: Text(
-            Provider.of<LanguageChangeNotifier>(context)
+            ProviderManager.languageChangeNotifier()
                 .getStrings()
                 .removeScanMessage,
           ),
@@ -203,13 +197,13 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
             FlatButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: Text(
-                Provider.of<LanguageChangeNotifier>(context).getStrings().no,
+                ProviderManager.languageChangeNotifier().getStrings().no,
               ),
             ),
             FlatButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(
-                Provider.of<LanguageChangeNotifier>(context).getStrings().yes,
+                ProviderManager.languageChangeNotifier().getStrings().yes,
               ),
             ),
           ],
@@ -221,12 +215,12 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) => LoadingPopup(
-                future: () async {
-                  return await widget.qrCodeStorage.delete(widget.id);
-                },
-                successFunction: () => {},
-                failFunction: () => {},
-              ),
+            future: () async {
+              return await widget.qrCodeStorage.delete(widget.id);
+            },
+            successFunction: () => {},
+            failFunction: () => {},
+          ),
         ).then((_) {
           Vibrate().execute();
           Navigator.pop(context, true);
@@ -240,7 +234,7 @@ class _ScanDetailPageState extends State<ScanDetailPage> {
       await launch(text);
     } else {
       ShowSnackBar().show(
-        text: Provider.of<LanguageChangeNotifier>(context)
+        text: ProviderManager.languageChangeNotifier()
                 .getStrings()
                 .launchUrlError +
             text,

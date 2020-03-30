@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:qr_scanner/src/interactors/vibrate.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/widgets/item_qr.dart';
 import 'package:qr_scanner/src/widgets/loading_popup.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/app_change_notifier.dart';
 import 'package:qr_scanner/src/services/repositories/qr_code_storage.dart';
 import 'package:qr_scanner/src/widgets/custom_sliding_up_panel.dart';
 import 'package:flutter/scheduler.dart';
@@ -32,7 +29,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       qrCodeStorage = QrCodeStorage.forUser(
-        user: Provider.of<AppGeneralNotifier>(context).getCurrentUser(),
+        user: ProviderManager.appGeneralNotifier().getCurrentUser(),
       );
     });
     super.initState();
@@ -49,12 +46,12 @@ class _ScanQRPageState extends State<ScanQRPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                Provider.of<LanguageChangeNotifier>(context)
+                ProviderManager.languageChangeNotifier()
                     .getStrings()
                     .scanQRPage,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Provider.of<ThemeChangeNotifier>(context)
+                  color: ProviderManager.themeChangeNotifier()
                       .getTheme()
                       .scanQRPageWords,
                   fontSize: 30.0,
@@ -111,7 +108,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
           duration: const Duration(seconds: 1),
           height: 180.0,
           decoration: BoxDecoration(
-            color: Provider.of<ThemeChangeNotifier>(context)
+            color: ProviderManager.themeChangeNotifier()
                 .getTheme()
                 .scanQrImageBackgroundColor,
             shape: BoxShape.circle,
@@ -122,7 +119,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                     spreadRadius: i * 20.0,
                     blurRadius: 10.0,
                     offset: Offset(0.0, -5.0),
-                    color: Provider.of<ThemeChangeNotifier>(context)
+                    color: ProviderManager.themeChangeNotifier()
                         .getTheme()
                         .primaryColor
                         .withAlpha((255 + (i * 8)) * i),
@@ -132,9 +129,8 @@ class _ScanQRPageState extends State<ScanQRPage> {
           child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Image(
-              image: Provider.of<ThemeChangeNotifier>(context)
-                  .getTheme()
-                  .scanQrImage,
+              image:
+                  ProviderManager.themeChangeNotifier().getTheme().scanQrImage,
             ),
           ),
         ),
@@ -143,7 +139,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   }
 
   void _openCamera() {
-    if (_panelController.isPanelClosed()) {
+    if (_panelController.isPanelClosed) {
       setState(() => _isOpen = !_isOpen);
       Future.delayed(const Duration(seconds: 1)).then((_) {
         setState(() => _isOpen = !_isOpen);
@@ -161,17 +157,16 @@ class _ScanQRPageState extends State<ScanQRPage> {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => LoadingPopup(
-              future: () async {
-                return await qrCodeStorage.create(qrCodeResult);
-              },
-              successFunction: () => {},
-              failFunction: () => {},
-            ),
+          future: () async {
+            return await qrCodeStorage.create(qrCodeResult);
+          },
+          successFunction: () => {},
+          failFunction: () => {},
+        ),
       ).then((_) => _panelController.close());
     } else {
-      widget.showSnackBar(Provider.of<LanguageChangeNotifier>(context)
-          .getStrings()
-          .qrSavedError);
+      widget.showSnackBar(
+          ProviderManager.languageChangeNotifier().getStrings().qrSavedError);
     }
   }
 
@@ -183,19 +178,18 @@ class _ScanQRPageState extends State<ScanQRPage> {
         _panelController.open();
       }
     } on FormatException {
-      widget.showSnackBar(Provider.of<LanguageChangeNotifier>(context)
+      widget.showSnackBar(ProviderManager.languageChangeNotifier()
           .getStrings()
           .backButtonError);
     } catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
-        widget.showSnackBar(Provider.of<LanguageChangeNotifier>(context)
+        widget.showSnackBar(ProviderManager.languageChangeNotifier()
             .getStrings()
             .cameraPermissionError);
       } else {
         print(ex);
-        widget.showSnackBar(Provider.of<LanguageChangeNotifier>(context)
-            .getStrings()
-            .unknownError);
+        widget.showSnackBar(
+            ProviderManager.languageChangeNotifier().getStrings().unknownError);
       }
     }
   }

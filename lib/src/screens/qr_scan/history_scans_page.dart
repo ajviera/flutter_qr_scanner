@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_scanner/src/helpers/enums/scan_type.dart';
 import 'package:qr_scanner/src/helpers/navigations/navigator.dart';
-import 'package:qr_scanner/src/providers/app_change_notifier.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/screens/qr_scan/scan_detail_page.dart';
 import 'package:qr_scanner/src/services/repositories/qr_code_storage.dart';
 import 'package:qr_scanner/src/widgets/color_loader_popup.dart';
@@ -30,7 +27,7 @@ class _HistoryScansPageState extends State<HistoryScansPage> {
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       qrCodeStorage = QrCodeStorage.forUser(
-        user: Provider.of<AppGeneralNotifier>(context).getCurrentUser(),
+        user: ProviderManager.appGeneralNotifier().getCurrentUser(),
       );
       setState(() {
         qrCodeSnapshots = qrCodeStorage.list();
@@ -62,10 +59,10 @@ class _HistoryScansPageState extends State<HistoryScansPage> {
   Widget _emptyBody() {
     return Center(
       child: Text(
-        Provider.of<LanguageChangeNotifier>(context).getStrings().dontHaveScans,
+        ProviderManager.languageChangeNotifier().getStrings().dontHaveScans,
         style: TextStyle(
           fontSize: 22.0,
-          color: Provider.of<ThemeChangeNotifier>(context)
+          color: ProviderManager.themeChangeNotifier()
               .getTheme()
               .cardBackgroundColor,
         ),
@@ -82,7 +79,7 @@ class _HistoryScansPageState extends State<HistoryScansPage> {
           height: 70.0,
           width: MediaQuery.of(context).size.width,
           child: Card(
-            color: Provider.of<ThemeChangeNotifier>(context)
+            color: ProviderManager.themeChangeNotifier()
                 .getTheme()
                 .cardBackgroundColor,
             elevation: 0.0,

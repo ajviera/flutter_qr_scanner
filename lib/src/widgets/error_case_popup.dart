@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/widgets/custom_raised_button.dart';
 
 class ErrorCasePopup extends StatelessWidget {
@@ -60,12 +58,12 @@ class ErrorCasePopup extends StatelessWidget {
                       ),
                     ),
                     CustomRaisedButton(
-                      buttonColor: Provider.of<ThemeChangeNotifier>(context)
+                      buttonColor: ProviderManager.themeChangeNotifier()
                           .getTheme()
                           .primaryColor,
                       textColor: Colors.white,
                       function: () => _back(),
-                      text: Provider.of<LanguageChangeNotifier>(context)
+                      text: ProviderManager.languageChangeNotifier()
                           .getStrings()
                           .acceptButton,
                       context: context,

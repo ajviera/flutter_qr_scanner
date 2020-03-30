@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 
 /// An indicator showing the currently selected page of a PageController
 class DotsIndicator extends AnimatedWidget {
@@ -50,9 +49,7 @@ class DotsIndicator extends AnimatedWidget {
       child: Center(
         child: Material(
           color: zoom > 1.07
-              ? Provider.of<ThemeChangeNotifier>(context)
-                  .getTheme()
-                  .primaryColor
+              ? ProviderManager.themeChangeNotifier().getTheme().primaryColor
               : color,
           type: MaterialType.circle,
           child: Container(

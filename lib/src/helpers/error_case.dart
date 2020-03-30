@@ -1,8 +1,6 @@
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:qr_scanner/src/providers/app_change_notifier.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 import 'package:qr_scanner/src/widgets/error_case_popup.dart';
 
 errorCase(var error, BuildContext context, var injectedFunction) {
@@ -13,18 +11,17 @@ errorCase(var error, BuildContext context, var injectedFunction) {
       error.toString().contains('Access Token has been revoked') ||
       error.toString().contains("Instance of 'Unauthorized'")) {
     // function = () => Provider.of<GeneralAppBloc>(context).notLogged();
-    function = () => Provider.of<AppGeneralNotifier>(context).logout();
+    function = () => ProviderManager.appGeneralNotifier().logout();
     errorMessage =
-        Provider.of<LanguageChangeNotifier>(context).getStrings().sectionError;
+        ProviderManager.languageChangeNotifier().getStrings().sectionError;
   } else if (error.toString().contains('Failed host lookup')) {
     function = injectedFunction;
-    errorMessage = Provider.of<LanguageChangeNotifier>(context)
-        .getStrings()
-        .connectionError;
+    errorMessage =
+        ProviderManager.languageChangeNotifier().getStrings().connectionError;
   } else if (error.toString().contains('TimeoutException')) {
     function = injectedFunction;
     errorMessage =
-        Provider.of<LanguageChangeNotifier>(context).getStrings().timeoutError;
+        ProviderManager.languageChangeNotifier().getStrings().timeoutError;
   } else if (error.toString().toLowerCase().contains('internal server error')) {
     return null;
   } else {
@@ -39,7 +36,7 @@ errorCase(var error, BuildContext context, var injectedFunction) {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        ErrorCasePopup(
+        return ErrorCasePopup(
           context: context,
           errorMessage: errorMessage,
           function: function,

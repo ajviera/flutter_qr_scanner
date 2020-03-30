@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_scanner/src/common/prefs_singleton.dart';
-import 'package:qr_scanner/src/helpers/enums/language_type.dart';
 import 'package:qr_scanner/src/interactors/vibrate.dart';
-import 'package:qr_scanner/src/providers/language_change_notifier.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
+import 'package:qr_scanner/src/locales/accepted_languages.dart';
 
 class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
@@ -25,8 +23,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   _setLanguage() {
     _languageType = _languages();
-    if (PrefsSingleton.prefs.getBool('languageSpanish') != null) {
-      if (PrefsSingleton.prefs.getBool('languageSpanish')) {
+    if (PrefsSingleton.prefs.getString('language') != null) {
+      if (PrefsSingleton.prefs.getString('language') ==
+          AcceptedLanguages.languages[0]) {
         _languageSelected = _languageType[0];
       } else {
         _languageSelected = _languageType[1];
@@ -39,14 +38,12 @@ class _SettingsPageState extends State<SettingsPage> {
   List<Map<String, dynamic>> _languages() {
     return [
       {
-        'id': LANGUAGETYPE.SPANISH,
-        'type':
-            Provider.of<LanguageChangeNotifier>(context).getStrings().spanish,
+        'id': AcceptedLanguages.languages[0],
+        'type': ProviderManager.languageChangeNotifier().getStrings().spanish,
       },
       {
-        'id': LANGUAGETYPE.ENGLISH,
-        'type':
-            Provider.of<LanguageChangeNotifier>(context).getStrings().english,
+        'id': AcceptedLanguages.languages[1],
+        'type': ProviderManager.languageChangeNotifier().getStrings().english,
       },
     ];
   }
@@ -75,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Text(
-            Provider.of<LanguageChangeNotifier>(context).getStrings().vibrate,
+            ProviderManager.languageChangeNotifier().getStrings().vibrate,
             style: TextStyle(color: Colors.white, fontSize: 20.0),
           ),
         ),
@@ -89,9 +86,9 @@ class _SettingsPageState extends State<SettingsPage> {
             });
           },
           activeTrackColor:
-              Provider.of<ThemeChangeNotifier>(context).getTheme().primaryColor,
+              ProviderManager.themeChangeNotifier().getTheme().primaryColor,
           inactiveTrackColor:
-              Provider.of<ThemeChangeNotifier>(context).getTheme().primaryColor,
+              ProviderManager.themeChangeNotifier().getTheme().primaryColor,
           activeColor: Colors.white,
         ),
       ],
@@ -103,15 +100,14 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.only(left: 10.0),
       child: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: Provider.of<ThemeChangeNotifier>(context)
+          canvasColor: ProviderManager.themeChangeNotifier()
               .getTheme()
               .appBarBackgroundColor,
         ),
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: Provider.of<LanguageChangeNotifier>(context)
-                .getStrings()
-                .language,
+            labelText:
+                ProviderManager.languageChangeNotifier().getStrings().language,
             labelStyle: TextStyle(color: Colors.white),
           ),
           isEmpty: _languageSelected == null,
@@ -142,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   _changeLanguage(Map<String, dynamic> newValue) {
     setState(() => _languageSelected = newValue);
-    Provider.of<LanguageChangeNotifier>(context).changeLanguage(newValue['id']);
+    ProviderManager.languageChangeNotifier().changeLanguage(newValue['id']);
   }
 
   Widget _optionCard({Widget child}) {
@@ -150,7 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
       height: 70.0,
       width: MediaQuery.of(context).size.width,
       child: Card(
-        color: Provider.of<ThemeChangeNotifier>(context)
+        color: ProviderManager.themeChangeNotifier()
             .getTheme()
             .cardBackgroundColor,
         elevation: 0.0,

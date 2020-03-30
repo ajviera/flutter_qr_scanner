@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:qr_scanner/src/providers/theme_change_notifier.dart';
+import 'package:qr_scanner/src/interactors/provider_manager.dart';
 
 class ItemQr extends StatelessWidget {
   const ItemQr({
@@ -16,7 +15,7 @@ class ItemQr extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Provider.of<ThemeChangeNotifier>(context)
+        color: ProviderManager.themeChangeNotifier()
             .getTheme()
             .cardBackgroundColor,
         borderRadius: BorderRadius.circular(10.0),

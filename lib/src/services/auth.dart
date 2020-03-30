@@ -15,15 +15,15 @@ class Auth implements BaseAuth {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<FirebaseUser> signIn(String email, String password) async {
-    FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
+    AuthResult user = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    return user;
+    return user.user;
   }
 
   Future<FirebaseUser> createUser(String email, String password) async {
-    FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
+    AuthResult user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    return user;
+    return user.user;
   }
 
   Future<FirebaseUser> currentUser() async {
@@ -52,11 +52,11 @@ class Auth implements BaseAuth {
       idToken: googleAuth.idToken,
     );
 
-    final FirebaseUser user =
+    final AuthResult user =
         await _firebaseAuth.signInWithCredential(credential);
     assert(user != null);
-    assert(!user.isAnonymous);
-    return user;
+    assert(!user.user.isAnonymous);
+    return user.user;
   }
 
   Future<Null> signOutWithGoogle() async {
